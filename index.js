@@ -113,18 +113,21 @@ function initDOM() {
   modalGuessEl.innerHTML = "";
   // Hide Modal if it was shown
   modal.classList.add("hide");
+  modal.style.viewTransitionName = "none";
 
   // Loop through all alphabet letters and populate the letter buttons.
   letters.forEach((letter) => {
     let occurrences = 0;
 
-    answer.forEach(l => {
-      if (l === letter) occurrences += 1;
+    answer.forEach((l) => {
+      if (l === letter) {
+        occurrences += 1;
+      }
     });
 
     const letterWrapper = document.createElement("div");
     letterWrapper.classList.add(`letter`, `letter-${letter}`);
-    
+
     const buttons = [];
 
     const button = document.createElement("button");
@@ -141,8 +144,8 @@ function initDOM() {
         .fill(null)
         .forEach((n, i) => {
           const buttonClone = button.cloneNode(true);
-          buttonClone.style.viewTransitionName = `letter-${letter}-${i+1}`;
-          buttonClone.classList.add('clone');
+          buttonClone.style.viewTransitionName = `letter-${letter}-${i + 1}`;
+          buttonClone.classList.add("clone");
           buttons.push(buttonClone);
         });
     }
@@ -174,6 +177,7 @@ function initDOM() {
 function displayModal(result) {
   modalTitle.innerText = result === "win" ? "Good Job!" : "Game Over!";
   modal.classList.remove("hide");
+  modal.style.viewTransitionName = "modal";
 }
 
 // Populates the DOM of the lives part, based on the lives variable, called every time we update the lives variable.
@@ -253,7 +257,9 @@ async function newGame() {
     chosenLetters = [];
 
     // Re-initialize the DOM to clear any old state
-    initDOM();
+    document.startViewTransition(() => {
+      initDOM();
+    });
   } catch (e) {
     console.log(e);
   }
